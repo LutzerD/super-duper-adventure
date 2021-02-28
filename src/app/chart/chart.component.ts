@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ExchangeService } from '../exchange.service';
-import { Stock } from '../Stock';
+import { MarketChart } from '../types/MarketChart';
 
 @Component({
   selector: 'app-chart',
@@ -8,7 +8,6 @@ import { Stock } from '../Stock';
   styleUrls: ['./chart.component.css'],
 })
 export class ChartComponent implements OnInit {
-  @Input() stock: Stock = { ticker: 'BTCUSDT' };
   public graph = {
     data: [
       {
@@ -30,24 +29,15 @@ export class ChartComponent implements OnInit {
   constructor(private source: ExchangeService) {}
 
   getData(): void {
-    this.source.getData().subscribe((data: any) => {
-      const chartOptions = {
-        type: 'scatter',
-        mode: 'lines+points',
-        marker: { color: 'red' },
-      };
-
-      this.graph.data = data;
-      console.log(this.graph.data);
-      return JSON.stringify(data);
+    this.source.getDataEvent().subscribe((marketChart: MarketChart) => {
+      this.graph.layout.title = marketChart.stock.ticker;
+      this.graph.data = marketChart.data;
+      return JSON.stringify(marketChart);
     });
   }
 
   ngOnInit(): void {
-    this.source.setTicker('BTCUSDT');
-  }
-
-  tickerSet(): void {
-    this.source.setTicker(this.stock.ticker);
+    this.getData();
+    this.source.sendData();
   }
 }

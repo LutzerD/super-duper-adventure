@@ -1,8 +1,7 @@
 import { Injectable, ɵɵsetComponentScope } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-import { MarketData } from 'src/MarketData';
+import { Observable, Subject } from 'rxjs';
+import { MarketChart } from './types/MarketChart';
 
 @Injectable({
   providedIn: 'root',
@@ -10,15 +9,21 @@ import { MarketData } from 'src/MarketData';
 export class ExchangeService {
   constructor(private http: HttpClient) {}
   private ticker: string = 'BTCUSDT';
+  private subject = new Subject<MarketChart>();
 
-  getData(): Observable<MarketData[]> {
-    console.log('going to api?');
-    return this.http.get<MarketData[]>(
+  getDataEvent(): Observable<MarketChart> {
+    return this.subject.asObservable();
+  }
+
+  sendData() {
+    const market: Observable<MarketChart> = this.http.get<MarketChart>(
       `http://localhost:8080/api/historicalData?symbol=${this.ticker}`
     );
+    market.subscribe((chart) => this.subject.next(chart));
   }
 
   setTicker(ticker: string): void {
     this.ticker = ticker;
+    this.sendData();
   }
 }

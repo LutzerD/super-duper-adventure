@@ -1,6 +1,2 @@
-<div>
-    <label for="ticker">Ticker: </label>
-    <!-- <input id="ticker" [(ngModel)]="stock.ticker"  placeholder="BTCUSDT"> -->
-    <input id="ticker" [(ngModel)]="stock.ticker" (keyup.enter)="tickerSet()" placeholder="BTCUSDT">
-</div>
+
 <plotly-plot [data]="graph.data" [layout]="graph.layout"></plotly-plot>
