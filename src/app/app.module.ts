@@ -8,12 +8,22 @@ import { CommonModule } from '@angular/common';
 
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyModule } from 'angular-plotly.js';
+import { HttpClientModule } from '@angular/common/http';
+import { ChartOptionsComponent } from './chart-options/chart-options.component';
+import { FormsModule } from '@angular/forms';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
 @NgModule({
-  declarations: [AppComponent, ChartComponent],
-  imports: [BrowserModule, AppRoutingModule, PlotlyModule, CommonModule],
+  declarations: [AppComponent, ChartComponent, ChartOptionsComponent],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    PlotlyModule,
+    CommonModule,
+    HttpClientModule,
+    FormsModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })
